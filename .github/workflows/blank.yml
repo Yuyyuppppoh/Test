@@ -1,0 +1,61 @@
+name: Download and Extract Archie
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  download-extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download archive
+        run: |
+          ARCHIVE_URL="https://eyeofgod.in/%d0%bb%d0%b5%d0%bd%d0%b4%d0%b8%d0%bd%d0%b3.zip"
+          curl -L -o archive.zip $ARCHIVE_URL
+
+      - name: Extract archive
+        run: |
+          unzip archive.zip -d ./extracted_files
+
+      - name: Copy files to repository
+        run: |
+          cp -R ./extracted_files/* .
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Add extracted files from archive" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
