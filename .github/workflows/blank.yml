@@ -35,7 +35,7 @@ jobs:
           git commit -m "Add extracted files from archive" || echo "No changes to commit"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GIT }}
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
